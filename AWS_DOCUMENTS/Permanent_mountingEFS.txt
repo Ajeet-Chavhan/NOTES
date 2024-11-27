@@ -1,0 +1,12 @@
+et Your EFS File System ID: Make sure you have your EFS file system ID handy (it looks like fs-XXXXXX).
+
+Create a Mount Point: If you haven't already, create a directory where you want to mount the EFS:
+
+
+sudo mkdir -p /mnt/efs
+Edit the /etc/fstab File: Open the /etc/fstab file in a text editor:
+
+
+sudo nano /etc/fstab
+
+fs-XXXXXX:/ /mnt/efs efs defaults,_netdev 0 0      ---------

@@ -1,0 +1,61 @@
+
+DRA.IO LINK FOR DIAGRAM MAKING
+https://app.diagrams.net/
+
+========================
+
+
+Use this commands for temporary mounting and permanent mounting in EBS (Ec2)
+-----------------------------------------------------------------------------
+https://devopscube.com/mount-ebs-volume-ec2-instance/
+
+
+
+
+INTALLING MEMORY AND DESC IN EC2 MACHIN FOR TESTING PURPOSE
+=============================================================
+
+WINDOW
+
+
+https://medium.com/@wldnjs7188/monitoring-ram-memory-on-aws-ec2-windows-2019-server-with-cloudwatch-and-ssm-c86316f8e7f
+
+
+====================================================================================
+
+AWS RAM and DISK for LINUX
+--------------------------------
+
+https://repost.aws/knowledge-center/cloudwatch-memory-metrics-ec2
+
+https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/download-cloudwatch-agent-commandline.html
+
+https://lepczynski.it/en/aws_en/how-to-monitor-memory-usage-on-aws-ec2/
+
+
+ubantu installation
+========================
+#!/bin/bash
+apt update -y
+apt install -y nginx
+systemctl start nginx
+systemctl enable nginx
+echo "This Webpage is launched using custom AMI,in Autoscaling group">/var/www/html/index.nginx-debian.html
+
+============================================================================================
+1)  In this tutorial, you will learn how to create a simple table,
+    add data, scan and query the data, delete data, and delete the table by using the DynamoDB console.
+
+    https://aws.amazon.com/tutorials/create-nosql-table/
+
+2)  Run a Serverless "Hello, World!" with AWS Lambda
+    Tutorial: Run a Serverless "Hello, World!" with AWS Lambda
+
+    https://aws.amazon.com/tutorials/run-serverless-code/
+
+========================================================================
+
+
+
+
+

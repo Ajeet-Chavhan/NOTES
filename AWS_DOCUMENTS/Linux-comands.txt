@@ -1,0 +1,36 @@
+rwx r-x r-x
+
+r - read -4
+w - write -2
+x- execute -1
+
+user   group  other
+rwx     rwx    rwx
+
+rwx     r-x    r-x
+
+4+2+1   4+0+1  4+0+1
+7          5      5
+
+d1 = 755 =777 =776
+
+chmod - it is used to change the permission of file or directory
+
+2) du -sh -- used to check the size of the directory
+
+   d -disk
+   u- usage
+   s- size
+   h- human
+
+3) df -h   - used to display the size of the system
+
+
+4 ) free -m  -used to display system memory
+
+5) echo - used for printing the statement
+    echo "good morning" >f2
+    cat f2 
+
+   echo -e "hii \t good " - print in two statement together
+   echo -e "hii \n good " - print one below one 
