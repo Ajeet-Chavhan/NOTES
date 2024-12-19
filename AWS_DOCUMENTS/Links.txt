@@ -57,5 +57,723 @@ echo "This Webpage is launched using custom AMI,in Autoscaling group">/var/www/h
 
 
 
+===================================================================================
+
+======Install Docker in amazone Linux ===========
+$ sudo yum update -y
+$ sudo yum install docker   
+$ sudo service docker start
+$sudo service docker status
+
+
+# add ec2-user to docker group by executing below comand
+$ sudo usermod -aG docker ec2-user  (visudo)
+
+# Restart the session
+$ exit 
+
+# then press  'R' to restart the session (Mobaxtream)
+
+# Verify docker installation
+$ docker -v
+
+
+=================
+Docker Command
+====================
+$ docker images
+$ docker pull images - pull from docker hub
+$ docker run image_name
+$ docker ps --- to check running container
+$ docker ps -a - to check stopped container
+$ docker rmi image_name -- to remove images
+$ docker rm container_id -- to remove container
+
+$ docker build -t any_name . -- to build the docker image
+$  docker tag backendapp ajeetchavhan/backendapp -- rename the image
+
+$ docker login 
+docker push ajeetchavhan/backendapp - push into docker hub
+$ docker build -t myimage(new image name) -f Dockerfile(file name) .   -----changing the image name
+
+# to check the docher network
+$ docker network ls
+
+# to inspect the docker
+$ docker inspect  bridge
+
+# DOCKER NETWORK CFREATION
+--------------------------
+# Disply docker network
+$ docker network ls
+
+#Create docker network
+$ docker network create ajeet-nw
+
+# inspect docker network
+$ docker network inspect ajeet-nw
+
+# delete docker network
+$ docker network rm ajeet-nw
+
+# Create Docker container with custom network
+$ docker run -p 8081:5000 --network ajeet-nw -d <image_name>
+  
+
+# to install ping utility inside the 
+apt update 
+apt-get install iputils-ping
+
+=====================================================================================================
+====================
+Copy Command
+=======================
+=> It is used to copy files from host machin to container machin
+
+ex :
+
+COPY target/java-app-jar  /usr/app
+
+COPY target/web.war  /usr/app/tomcat/webapp/
+
+COPY python-app.py   /usr/app
+
+
+===========================
+EXPOSE KEYWORD
+===================
+=> It is used to specify on which port number our container will run
+
+EX : EXPOSE 8080
+
+note : BY using Expose keyword cant modify docker container port (it is just to provide information).
+
+
+
+
+====================================
+How to Dockerize java web Application
+======================================
+=> project source code will be available in git repo
+=> we need to clone git repo into our machin and we need to build that code
+=> To build java projects we will  use Maven as build Tool
+=> To build java project using maven we will execute maven goals like below 
+         $ mvn clean package
+
+=> Java web app will be packaged as war (Web- Archive) file
+
+Note :
+=> To run war file we need to keep war file in tomcat server webapps folder (deployment)
+
+### Git Repo URL : https://github.com/neeltechjunction/maven-web-app.git
+
+## Step 1 : Install git client software
+
+$ sudo yum install git -y
+
+## step -2 : clone git repo
+ 
+$ git  clone https://github.com/neeltechjunction/maven-web-app.git
+
+## step-3 : Go inside project directory
+
+$ cd maven-web-app
+
+## step-4 : install maven software
+   $ sudo yum install maven
+
+## step-5 : build project using maven goals
+$ mvn clean package
+
+
+note : Please install docker machin
+
+## step-6 : create Dockerfile
+  $ vi Dockerfile
+
+   From tomcat:8.0.20-jre8
+   MAINTAINER ajeet
+   EXPOSE 8080
+   COPY target/maven-web-app.war /usr/local/tomcat/webapps/maven-web-app.war
+
+## step-7 : Build docker Image
+
+$ docker build -t <image-name> .
+
+## step -8 : check docher image created or not
+
+$ docker images
+
+## docker run bakend
+
+$ docker run -d <image_id>  d---deattached mode
+
+## step -9 : Run Docker Images
+
+$ docker run -p 8080:8080 -d <image-name> 
+
+ p - port mapping
+
+ d - deattached
+
+## step -10 : check docker container
+$ docker ps
+
+
+
+
+
+
+## step 11 : Enable 8080 port in EC2 VM security group inbound rules
+
+## step 12 : Access Applicatrion in browser 
+
+URL : http://public-ip:8080/maven-web-app/
+
+
+
+========================================================================================================================================================
+
+
+
+
+HOW TO DOCKRISE SPRING BOOT APPLICATION
+======================================
+
+=> Spring boot is a java based framwork
+
+=> using Spring Boot we can develop java application easily
+
+=> Spring Boot application will be package as jar file for deployment
+
+
+================================
+Docker file for Boot App
+================================
+
+FROM openjdk:11
+
+MAINTAINER ajeet chavahan
+
+COPY target/spring-boot-docker-app.jar  /usr/app
+
+WORKDIR /usr/app
+
+#WORKDIR = CD
+
+ENTRYPOINT ["java", "-jar", "spring-boot-docker-app.jar"]
+
+EXPOSE 8080
+
+===================================================
+
+# Clone git repo
+$ https://github.com/neeltechjunction/spring-boot-docker-app-main.git
+
+# get into project directory
+$ cd sspring-boot-docker-app 
+
+# build project using maven
+$ mvn clean package
+
+# check target directory contect
+$ la -l target
+
+# Build docker image using below command
+$ docker build -t ajeetjunction.app .
+
+# check docker images created
+$ docker images
+
+# docker run
+$ docker run <image_name>
+
+# Run docker image
+$ docker run -p 8080:8080 -d 
+
+ Note : Enable 8080 port in ec2 Vm security Grouo rules
+
+Note : here tomcat will download automatically
+
+URL : http ://public-ip:8080/
+
+# Check docker container-logs
+$ docker logs <container-id>
+
+# docker stop
+$ docker stope <container-id>
+
+# docker start 
+$ docker start <container-id>
+
+=======================
+HOW TO CONNECT WITH CONTAINER??
+==================================
+# get container running info
+$ docker ps
+
+# connect with container
+$ docker exec -it <container_name> /bin/bash
+
+note : We  can with only Running Container
+
+===============================================
+RUN vs CMD Entrypoint in Dockerfile
+======================================
+
+RUN : To execute instruction while Docker image getting created
+
+CMD : To execute instruction while Docker container getting created
+
+ENTRYPOINT :To execute instruction while Docker container getting created
+
+note : CMD instruction we can ovverride while running docker where as ENTRYPOINT instruction we cantoverride.
+
+=============================================================================
+
+
+
+
+
+===========================================================================
+DOCKERIZE PYTHON APPLICATION
+======================================================================
+
+# install git
+# intall docker
+
+NOTE :Maven build tool is not required for python appliction since it is scripting language
+
+$ git clone https://github.com/neeltechjunction/python-flask-docker-app-main.git
+
+$ cd python-flask-docker-app
+
+$ docker build -t python-app(any name) .
+
+$ docker run -p 5000:5000 -d python-app
+
+Note : Enable 8080 port in ec2 Vm security Grouo rules
+
+URL : http ://public-ip:5000/
+
+
+=============================================================================================
+
+
+================================
+SHELL SCRIPT FOR DEPENDENCY INSTALLATION
+=======================================
+#!/bin/bash
+
+sudo yum install git -y
+
+sudo yum install maven
+
+sudo yum update -y 
+sudo yum install docker -y
+sudo service docker start
+# add ec2-user to docker group by executing below comand
+sudo usermod -aG docker ec2-user
+
+# chech docker compose is installed or not
+$ docker-compose --version
+
+# download docker compose
+$ sudo curl -l "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o/usr/local/bin/docker-compose
+
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+
+#Give permission
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+# how to check compose installed or not
+$ docker-compose --version
+
+
+======================
+DOCKER COMPOSE SET UP
+======================
+# chech docker compose is installed or not
+$ docker-compose --version
+
+# download docker compose
+$ sudo curl -l "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o/usr/local/bin/docker-compose
+
+#Give permission
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+# how to check compose installed or not
+$ docker-compose --version
+
+===============================================
+========================================
+# git clone
+git clone https://github.com/neeltechjunction/spring-boot-mysql-docker-compose
+
+# create docker file
+# create mvm clean package
+# create docker build
+
+# create docker network
+$ springboot-db-net
+
+$docker-compose up -d
+
+# to enter int to database container
+$ docker exec -it 3b985e5ed70c /bin/bash
+
+# to login to data base
+$ mysql -u root -proot
+
+$ docker-compose down
+==========================
+
+Docker Network Creation
+======================
+version:"3"
+services:
+        application:
+            image: spring-boot-mysql-app
+            ports:
+              - "8080:8080"
+             networks:
+              - springboot-db-net
+             depends_on:
+               - mysqldb
+             volumes:
+              - /data/springboot-app
+     
+        mysqldb:
+          image: mysql:5.7
+        networks:
+              - springboot-db-net
+         environment:
+              - MYSQL_ROOT_PASSWORD=root
+              - MYSQL_DATABASE=sbms
+         volumes:
+           -/data/mysql
+networks:
+  springboot-db-net:
+
+
+
+
+
+
+===================================================================================================
+
+
+======================================================
+DOCKER VOLUME -DEMO
+======================================================
+$ docker -v
+
+$ docker pull nginx
+
+$ docker run --name c1 -d nginx
+
+$ docker ps
+
+# Create some files inside a container. then ,you can check where they are saved on the host.
+
+$ docker exce -it c1 bin/bash - enter in to container
+
+$ touch file-{1..10}
+
+# go to docker host
+
+$ find / -iname file.txt
+
+/var/lib/docker/overlay2/099999..............etc
+
+# now kill the container
+
+$ docker rm container id
+
+$ find / -name file.txt ----data will get lost
+===================================================
+1) creating Anonymous volume
+
+
+$ docker volume ls
+
+$ docker run -it --name c2 -v /test nginx /bin/bash
+
+$ ls or df -h 
+
+
+# a directory named 'test has created' under the root directory ('/')
+# go to docker host
+
+# docker inspect volume name
+
+ex : docker inspect 00b3cddc2288cf6425a853a2504500b6c0c1836bf7b55c2a3bc7a6e34e860098
+
+note down the mount pth : /var/lib/docker/volumes/00b3cddc2288cf6425a853a2504500b6c0c1836bf7b55c2a3bc7a6e34e860098/_data
+
+# no got to container crete the some file again
+
+$ cd /test
+
+# now delete the container 
+
+$ docker rm -f container_id
+
+result data will not get lost
+=================================================================
+2) CREATING NAMED VOLUME
+
+$ docker run -it --name c3 -v myvolume:/test1 nginx /bin/bash
+
+$ docker inspect myvolume
+
+# notedown the path 
+
+
+====================================================================
+
+3) Bind mounts
+
+$ mkdir ajit
+
+$ docker run -it --name c4 -v /home/ec2-user/ajit:/dir2 nginx /bin/bash
+
+$ docker volume ls
+
+Now we to create the directory inside the container
+
+method - 1 ---------------> using docker file
+
+$ vi Dockerfile
+
+FROM ubuntu
+
+VOLUME ["/myfolder"]
+
+$ docker build -t ajit .
+
+$ docker imagsges
+
+$ docker run -it --name c5 ajit /bin/bash
+
+note down the mount point
+
+$ find / -iname file1.java
+
+/var/lib/docker/volumes/2345fr256565...
+
+cd /var/lib/docker/volumes/2345fr256565....
+
+$ cd volume
+
+docker run -it --name c6 --volume-from c5 --privileged=rue ubuntu /bin/bash
+=====================================================================
+
+
+
+
+
+==================================================================================================================
+Manoj
+=========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DOCKER PROJECT WITH JENKINS AND GIT 
+===========================================
+Note - using ubantu server
+1> install docker
+   ----------------
+   shell
+   #!/bin/bash
+echo << EOF
+"=========================================================="
+"||     Set up Docker's Apt repository ...............   ||"
+"=========================================================="
+EOF
+#Set up Docker's Apt repository
+# Add Docker's official GPG key:
+sudo apt-get update -y
+sudo apt-get install ca-certificates curl gnupg -y
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update -y
+
+echo << EOF
+"=========================================================="
+"||   Docker's Apt repository is completed...........    ||"
+"=========================================================="
+EOF
+
+
+
+echo << EOF
+"=========================================================="
+"||   Install the Docker packages....................    ||"
+"=========================================================="
+EOF
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+echo << EOF
+"=========================================================="
+"||   Install is completed ....................    ||"
+"=========================================================="
+EOF
+
+dockerStatus=$(systemctl status docker | awk '/Active/ {print $3}' | tr -d "[()]")
+dockerVersion=$(docker -v | awk '/version/ {print $3}' | tr -d ",")
+
+echo "The Docker status is $dockerStatus"
+echo "The Docker version is $dockerVersion"
+
+
+---------------------------------------------------
+
+Note
+============
+#server restart 
+
+ $ init 6
+
+# server down 
+$ init 0
+
+# go to below path and check
+ $ cat /etc/group
+sudo usermod -aG docker jenkines
+visudo  --to give the permission
+(jenkins ALL=(ALL) NOPASSWD: /usr/bin/docker)--give permission to jenkin server
+
+2> jenkins installation 
+   --------------------
+
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+
+sudo apt install fontconfig openjdk-17-jre
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+sudo systemctl status jenkins
+
+--------------------------------------------------------------------
+3> git installation
+-------------------------
+4> open jenkins install plugins
+   pipeline
+   pipeline stage view -- we can see the pipeline stages
+  eclipe
+
+---------------------------------------------------------
+5> Start jenkine and configure the pipeline
+
+   pipeline{
+    agent any 
+
+    tools {
+       jdk 'java-11'
+       maven 'maven'
+       }
+ stages{
+        stage('git checkout'){
+           steps{
+               git branch: 'main', url: 'https://github.com/Ajeet-Chavhan/fork-from-Manoj.git'
+           }
+
+         }
+stage('compile'){
+           steps{
+               sh "mvn compile"
+            }
+       }
+       stage('Build'){
+          steps{
+              sh "mvn clean install" 
+          }
+      }
+      stage('Docker Build and tag'){
+         steps{
+            sh "docker build -t ajeetchavhan/puneethrajkumar:1 ."
+         }
+      }
+
+      stage('Docker image scan'){
+           steps{
+                sh "trivy image --format table -o trivy-image-report.html ajeetchavhan/puneethrajkumar:1"
+           }     
+      }
+      stage('Containerisation'){
+        steps{
+            sh '''
+             docker stop c1
+            docker rm c1
+             docker run -it -d --name c1 -p 9000:8080 ajeetchavhan/puneethrajkumar:1
+
+            '''
+        }
+      }
+      stage('Login to Docker Hub') {
+                    steps {                        
+                        script {
+                           withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                               sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                          }
+                     }
+                     }
+
+}
+
+ stage('Pushing image to repository'){
+            steps{
+               sh 'docker push ajeetchavhan/puneethrajkumar:1'
+            }
+        }
+}
+}
+   
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
